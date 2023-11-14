@@ -25,16 +25,16 @@ export class AppService {
     // const tasks = await this.taskRepository.find({where: {todoId}, select: ['amount']})
     
     // const sum:number = tasks.reduce((result, task) => result + task.amount, 0)
-    // if(sum + amount >= todo.value)
-    //   throw new ForbiddenException()
     
 
     const { sum } = await this.taskRepository
                         .createQueryBuilder('task')
                         .select("SUM(task.amount)", "sum")
                         .getRawOne()
-
-                        console.log({sum});
+    
+    if(sum + amount >= todo.value)
+       throw new ForbiddenException()
+              console.log({sum});
     
     const newTask = new Task(title, amount, todo)
     return await this.taskRepository.save(newTask)
