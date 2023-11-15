@@ -22,6 +22,7 @@ export class AppService {
     const todo = await this.todoRepository.findOneBy({id: todoId})
     if(!todo)
       throw new NotFoundException()
+      
     // const tasks = await this.taskRepository.find({where: {todoId}, select: ['amount']})
     
     // const sum:number = tasks.reduce((result, task) => result + task.amount, 0)
@@ -29,14 +30,15 @@ export class AppService {
     //   throw new ForbiddenException()
     
 
-    const { sum } = await this.taskRepository
-                        .createQueryBuilder('task')
-                        .select("SUM(task.amount)", "sum")
-                        .getRawOne()
+    // const { sum } = await this.taskRepository
+    //                     .createQueryBuilder('task')
+    //                     .select("SUM(task.amount)", "sum")
+    //                     .getRawOne()
 
-                        console.log({sum});
+    //                     console.log({sum});
     
-    const newTask = new Task(title, amount, todo)
+    // const newTask = new Task(this.todoRepository, title, amount, todo, todoId)
+    const newTask = this.taskRepository.create({title, amount,todoId})
     return await this.taskRepository.save(newTask)
   }
 
