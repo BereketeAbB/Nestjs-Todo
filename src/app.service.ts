@@ -1,5 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { Todo } from './entities/todo.entity';
 import { Repository } from 'typeorm';
 import { Task } from './entities/task.entity';
@@ -20,25 +20,17 @@ export class AppService {
 
   async addTask(title:string, amount:number, todoId:number){
     const todo = await this.todoRepository.findOneBy({id: todoId})
+    
     if(!todo)
       throw new NotFoundException()
-      
-    // const tasks = await this.taskRepository.find({where: {todoId}, select: ['amount']})
-    
-    // const sum:number = tasks.reduce((result, task) => result + task.amount, 0)
-    // if(sum + amount >= todo.value)
-    //   throw new ForbiddenException()
-    
 
-    // const { sum } = await this.taskRepository
-    //                     .createQueryBuilder('task')
-    //                     .select("SUM(task.amount)", "sum")
-    //                     .getRawOne()
+    const totalSum:number = todo.task.reduce((sum, task) => sum + task.amount, 0)
 
-    //                     console.log({sum});
+    if(totalSum + amount > todo.value)
+        throw new ForbiddenException()
     
-    // const newTask = new Task(this.todoRepository, title, amount, todo, todoId)
-    const newTask = this.taskRepository.create({title, amount,todoId})
+    const percent = amount / todo.value * 100
+    const newTask = this.taskRepository.create({title, amount, percent, todoId})
     return await this.taskRepository.save(newTask)
   }
 
@@ -51,7 +43,4 @@ export class AppService {
     return todo
   }
 
-  async getTodos(title:string) {
-    
-  }
 }

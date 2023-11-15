@@ -12,7 +12,7 @@ export class Todo {
     @Column()
     value: number
 
-    @OneToMany(() => Task, task => task.todo)
+    @OneToMany(() => Task, task => task.todo, {eager: true})
     task: Task[]
 
     constructor(title:string, value:number){
