@@ -43,4 +43,8 @@ export class AppService {
     return todo
   }
 
+  async getAllTodo(){
+    return this.todoRepository.find()
+  }
+
 }

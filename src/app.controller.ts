@@ -21,5 +21,9 @@ export class AppController {
   getTodo(@Param('todoTitle') todoTitle:string) { 
     return this.appService.getTodo(todoTitle)
   }
+  @Get('todo')
+  getAllTodo() { 
+    return this.appService.getAllTodo()
+  }
 
 }
